@@ -1,27 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function Header() {
-  const searchParams = useSearchParams();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    // URLパラメータから認証状態を確認
-    if (searchParams.get('success') === 'true') {
-      setUser({
-        name: 'テストユーザー',
-        email: 'test@example.com'
-      });
-    } else if (searchParams.get('logout') === 'true') {
-      setUser(null);
-    }
-  }, [searchParams]);
-
-  const isLoading = false;
-  const error = null;
+  const { user, isLoading, error } = useUser();
 
   if (isLoading) return <div>読み込み中...</div>;
   if (error) return <div>エラー: {error.message}</div>;
@@ -50,7 +33,7 @@ export default function Header() {
                 API ドキュメント
               </Link>
               <a
-                href="/api/auth/logout"
+                href="/auth/logout"
                 className="bg-red-500 hover:bg-red-700 px-3 py-1 rounded"
               >
                 ログアウト
@@ -58,7 +41,7 @@ export default function Header() {
             </>
           ) : (
             <a
-              href="/api/auth/login"
+              href="/auth/login"
               className="bg-green-500 hover:bg-green-700 px-3 py-1 rounded"
             >
               ログイン

@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useUser } from '@auth0/nextjs-auth0';
 import Header from '@/components/Header';
 
 function Profile() {
@@ -106,4 +106,4 @@ function Profile() {
   );
 }
 
-export default withPageAuthRequired(Profile);
+export default Profile;
