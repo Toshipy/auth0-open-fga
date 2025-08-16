@@ -93,7 +93,7 @@ function Profile() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     完全なユーザー情報（開発用）
                   </label>
-                  <pre className="bg-gray-100 p-4 rounded text-xs overflow-auto">
+                  <pre className="bg-gray-100 p-4 rounded text-xs overflow-auto text-gray-900">
                     {JSON.stringify(user, null, 2)}
                   </pre>
                 </div>
