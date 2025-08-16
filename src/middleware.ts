@@ -11,6 +11,15 @@ const isPublicPage = (pathname: string) => {
 }
 
 export async function middleware(request: NextRequest) {
+	// 環境変数の有無をブール値でログ（値自体は出力しない）
+	console.log('Auth0 env present', {
+		domain: !!(process.env.AUTH0_DOMAIN || process.env.AUTH0_ISSUER_BASE_URL),
+		appBaseUrl: !!(process.env.APP_BASE_URL || process.env.AUTH0_BASE_URL),
+		secret: !!process.env.AUTH0_SECRET,
+		clientId: !!process.env.AUTH0_CLIENT_ID,
+		clientSecret: !!process.env.AUTH0_CLIENT_SECRET,
+	})
+
 	const authRes = await auth0.middleware(request)
 
 	const { pathname } = request.nextUrl
