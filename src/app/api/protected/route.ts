@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth0 } from '@/lib/auth0';
+import { checkAccess } from '@/lib/openfga';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,6 +11,17 @@ export async function GET(request: NextRequest) {
         { error: '認証が必要です' },
         { status: 401 }
       );
+    }
+
+    // OpenFGAで閲覧権限をチェック（ドキュメントIDは例として固定）
+    const allowed = await checkAccess({
+      user: `user:${session.user.sub}`,
+      relation: 'can_read',
+      object: 'document:123',
+    });
+
+    if (!allowed) {
+      return NextResponse.json({ error: 'forbidden' }, { status: 403 });
     }
 
     return NextResponse.json({

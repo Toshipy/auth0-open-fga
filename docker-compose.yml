@@ -1,0 +1,27 @@
+services:
+  openfga:
+    image: openfga/openfga:latest
+    container_name: openfga
+    command: run
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=memory
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  playground:
+    image: ghcr.io/openfga/playground:latest
+    container_name: openfga-playground
+    environment:
+      - OPENFGA_API_URL=http://localhost:8080
+    ports:
+      - "3001:3000"
+    depends_on:
+      openfga:
+        condition: service_healthy
+
+

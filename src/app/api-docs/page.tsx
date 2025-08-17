@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0';
 import Header from '@/components/Header';
+import 'swagger-ui-dist/swagger-ui.css';
 
 export default function ApiDocs() {
   const { user, isLoading } = useUser();
@@ -12,49 +13,21 @@ export default function ApiDocs() {
     const loadSwaggerUI = async () => {
       try {
         const SwaggerUI = (await import('swagger-ui-dist/swagger-ui-bundle')).default;
-        
         SwaggerUI({
           dom_id: '#swagger-ui',
           url: '/api/swagger',
-          presets: [
-            SwaggerUI.presets.apis,
-            SwaggerUI.presets.standalone
-          ],
-          plugins: [
-            SwaggerUI.plugins.DownloadUrl
-          ],
-          layout: 'StandaloneLayout',
-          requestInterceptor: (request: any) => {
-            if (user) {
-              request.headers['Authorization'] = `Bearer ${user.accessToken}`;
-            }
-            return request;
-          },
-          onComplete: () => {
-            setSwaggerLoaded(true);
-          }
+          presets: [SwaggerUI.presets.apis],
+          onComplete: () => setSwaggerLoaded(true),
         });
       } catch (error) {
         console.error('Swagger UIの読み込みエラー:', error);
       }
     };
 
-    if (!isLoading) {
-      loadSwaggerUI();
-    }
-  }, [user, isLoading]);
+    if (!isLoading) loadSwaggerUI();
+  }, [isLoading]);
 
-  useEffect(() => {
-    const loadSwaggerCSS = () => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = 'https://unpkg.com/swagger-ui-dist@5.10.3/swagger-ui.css';
-      document.head.appendChild(link);
-    };
-
-    loadSwaggerCSS();
-  }, []);
+  // CSS はパッケージからインポート済み
 
   if (isLoading) {
     return <div>読み込み中...</div>;
